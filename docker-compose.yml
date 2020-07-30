@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:12
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./migrations/:/docker-entrypoint-initdb.d/
+#    networks:
+#      - backend
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  worker:
+    build: .
+#    networks:
+#      - backend
+    volumes:
+      - ./data:/data
+    depends_on:
+      - db
+    environment:
+      INTERVAL: 6000
+      CONCURRENCY: 500
+      TIMEOUT: 10
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  api: 
+    container_name: public_api
+    build: 
+      context: ./api
+    volumes: 
+      - "./api:/app"  
+    depends_on:
+      - db
+      - worker
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8000:8000"
+
+volumes:
+  db-data:

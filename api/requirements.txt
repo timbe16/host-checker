@@ -1,0 +1,4 @@
+sanic==0.3.0
+sanic_crud
+peewee==2.8.5
+psycopg2-binary

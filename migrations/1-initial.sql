@@ -1,0 +1,1 @@
+create table urlcheck(id SERIAL, check_datetime timestamp DEFAULT NOW(), url VARCHAR(2000), duration real, response_code INT);
