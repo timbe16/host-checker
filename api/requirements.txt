@@ -1,4 +1,4 @@
-sanic==0.3.0
+sanic==20.12.6
 sanic_crud
 peewee==2.8.5
 psycopg2-binary
